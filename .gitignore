@@ -161,3 +161,6 @@ cython_debug/
 
 .DS_Store
 postorder_traversal
+report/*
+!report/report.pdf
+!report/report.tex
