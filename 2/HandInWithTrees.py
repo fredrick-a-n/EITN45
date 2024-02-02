@@ -1,9 +1,9 @@
 from collections import Counter
 from bitarray import bitarray
 import numpy as np
-from totree import printBTree
-from treevisualization import visualize_binary_tree
-from node import Node
+from ToTree import printBTree
+from TreeVisualization import visualize_binary_tree
+from Node import Node
 
 INPUT_PATH = 'Alice29.txt'
 COMPRESSED_PATH = 'compressed'
