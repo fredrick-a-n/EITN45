@@ -1,13 +1,13 @@
 from collections import Counter
 from bitarray import bitarray
 import numpy as np
-from entropy import InfoTheory
+# Entropy is the first handIn
+from Entropy import InfoTheory
 
-INPUT_PATH = 'Alice29.txt'
-COMPRESSED_PATH = 'compressed'
-DECOMPRESSED_PATH = 'decompressed.txt'
-CODE_TABLE_PATH = 'code_table.csv'
-OCCURANCE_PATH = 'occurance.csv'
+INPUT_PATH = 'compfiles/Alice29.txt'
+COMPRESSED_PATH = 'outputs/compressed'
+DECOMPRESSED_PATH = 'outputs/decompressed.txt'
+CODE_TABLE_PATH = 'outputs/code_table.csv'
 
 class Node(object):
     def __init__(self, zero=None, one=None):
@@ -104,10 +104,11 @@ def compress(data, codebook):
         if len(s) % 8 != 0:
             l = (8-len(s) % 8)
             inv_codebook = {value: key for key, value in codebook.items()}
-            for _ in range(pow(2, l)):
+            while True:
                 dummy_bits = ''.join(str(element) for element in [
                                      np.random.choice([0, 1]) for i in range(l)])
-                if any([inv_codebook.get(dummy_bits[0:i]) is not None for i in range(0, len(dummy_bits))]):
+                print(dummy_bits)
+                if any([inv_codebook.get(dummy_bits[0:i]) is not None for i in range(0, len(dummy_bits)+1)]):
                     continue
                 else:
                     s += dummy_bits
@@ -160,23 +161,6 @@ def print_codebook(codebook, occurrences):
     else:
         raise TypeError('Input must be a dictionary')
     
-def print_occurance(occurrences):
-    # Input:
-    #   codebook: a dictionary with the Huffman code for each byte
-    # Output:
-    #   code_table.csv: a csv file with the codebook
-    if isinstance(codebook, dict):
-        probabilities = sorted([(key, value)
-            for (key, value) in occurrences.items()], key=lambda x: x[1], reverse=True)
-        with open(OCCURANCE_PATH, 'w') as f:
-            f.write("symbol,probability\n")
-            for [key, value] in probabilities:
-                f.write("%s,%s\n" % (key.hex(), str(value)))
-    else:
-        raise TypeError('Input must be a dictionary')
-
-
-
 if __name__ == '__main__':
 
     # COMPRESS
@@ -188,11 +172,11 @@ if __name__ == '__main__':
 
     entropy = InfoTheory.Entropy(InfoTheory, np.array([value/len(data) for _, value in occurrences.items()]))
     entropy_compressed = InfoTheory.Entropy(InfoTheory,np.array([value/len(data) for _, value in Counter(compressed_data).items()]))
-    print("Entropy of original text: " + entropy)
-    print("Entropy of compressed text: " + entropy_compressed)
+    print("Entropy of original text: ", entropy)
+    print("Entropy of compressed text: ", entropy_compressed)
 
     average_length = sum([len(codebook[key])*value for key, value in occurrences.items()])/len(data)
-    print("Average character length in compressed text: " + average_length)
+    print("Average character length in compressed text: ", average_length)
 
     print_to_file(compressed_data, COMPRESSED_PATH)
     print_codebook(codebook, occurrences)
@@ -200,6 +184,5 @@ if __name__ == '__main__':
     # DECOMPRESS
     compressed = read_data(COMPRESSED_PATH)
     comp_count = Counter(compressed)
-    print_occurance(comp_count)
     decompressed = decompress(compressed, codebook)
     print_to_file(decompressed, DECOMPRESSED_PATH)

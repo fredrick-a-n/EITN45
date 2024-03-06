@@ -161,6 +161,17 @@ cython_debug/
 
 .DS_Store
 postorder_traversal
+1/HandIn1.pdf
+1/report/*
+!1/report/report.pdf
+!1/report/report.tex
+2/HandInAlice.pdf
 2/report/*
 !2/report/report.pdf
 !2/report/report.tex
+2/outputs
+2/compfiles
+3/HandIn3.pdf
+3/report/*
+!3/report/report.pdf
+!3/report/report.tex
